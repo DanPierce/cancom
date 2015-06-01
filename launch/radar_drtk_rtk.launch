@@ -1,0 +1,90 @@
+<launch>
+
+	<!-- Start the novatel node for Receiver 1 -->
+	<node pkg="novatel" type="novatel_node" name="novatel_1" output="screen" required="true">
+	  
+	  <!-- Configure how to connect to the novatel -->
+	   <param name="port" value="/dev/ttyUSB0"/>
+		<param name="baudrate" value="115200" />
+
+		<!-- Commands for ports not connected to the present roscore -->
+		<!-- <param name="configure_port" value="COM2,9600,RTCM,NONE" /> -->
+
+		<!-- Remapping arguments are not used in this driver -->
+		<param name="odom_topic" value="/novatel_1_odom" />
+		<param name="ephemeris_topic" value="/novatel_1_ephem" />
+		<param name="dual_band_range_topic" value="/novatel_1_range" />
+		
+		<param name="log_commands" value="BESTUTMB ONTIME 1.0; BESTVELB ONTIME 1.0" />
+
+		<!-- Logs periods are in seconds -->
+		<param name="gps_default_logs_period" value="1.0" />
+		<param name="span_default_logs_period" value="0.0" />
+		<param name="range_default_logs_period" value="1.0" />
+		<!-- must log psrpos for range to be complete -->
+		<param name="psrpos_default_logs_period" value="1.0" />
+
+		<!-- true/false to log ephem ONNEW -->
+		<param name="ephem_log" value="true" />
+
+	</node>
+
+
+	<!-- Start the novatel node for Receiver 2 -->
+	<node pkg="novatel" type="novatel_node" name="novatel_2" output="screen" required="true">
+	  
+	  <!-- Configure how to connect to the novatel -->
+	  <param name="port" value="/dev/ttyUSB2"/>
+		<param name="baudrate" value="115200" />
+
+		<!-- Commands for ports not connected to the present roscore -->
+		<!-- <param name="configure_port" value="COM2,9600,RTCM,NONE" /> -->
+
+		<!-- Remapping arguments are not used in this driver -->
+		<param name="odom_topic" value="/novatel_2_odom" />
+		<param name="ephemeris_topic" value="/novatel_2_ephem" />
+		<param name="dual_band_range_topic" value="/novatel_2_range" />
+		
+		<param name="log_commands" value="BESTUTMB ONTIME 1.0; BESTVELB ONTIME 1.0" />
+
+		<!-- Logs periods are in seconds -->
+		<param name="gps_default_logs_period" value="1.0" />
+		<param name="span_default_logs_period" value="0.0" />
+		<param name="range_default_logs_period" value="1.0" />
+		<!-- must log psrpos for range to be complete -->
+		<param name="psrpos_default_logs_period" value="1.0" />
+
+		<!-- true/false to log ephem ONNEW -->
+		<param name="ephem_log" value="ONTIME 1.0" />
+
+	</node>
+
+
+	<!-- This is the DRTK Node -->
+	<node pkg="drtk" type="drtk_node" name="drtk" output="screen" required="true">
+
+		<!-- This node uses remapping arguments & default topics -->
+		<remap from="ephem" to="novatel_2_ephem"/>
+		<remap from="rcvr1_range" to="novatel_1_range"/>
+		<remap from="rcvr2_range" to="novatel_2_range"/>
+		<!-- <remap from="rpv" to="drtk_rpv"/> -->
+	
+	</node>
+
+
+	<node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure" />
+
+	<!-- Start the novatel node for Receiver 1 -->
+	<!-- <node pkg="sicktoolbox_wrapper" type="sicklms" name="sicklms_node" output="screen" required="true">
+	  
+	  Configure how to connect to the novatel
+	   	<param name="port" value="/dev/ttyUSB1"/>
+		<param name="baudrate" value="38400" />
+		<param name="units" value="cm" />
+	</node> -->
+
+		<node pkg="cancom" type="cancom_node" name="cancom_node" output="screen" required="true">
+	  
+	</node>
+
+</launch>

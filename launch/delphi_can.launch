@@ -1,0 +1,12 @@
+<launch>
+
+	<node pkg="cancom" type="cancom_node" name="cancom_node" output="screen" required="true">
+	  <param name="port" value="/dev/pcanusb0" />
+	  <param name="publish_rate" value="0.05" />
+	  <param name="sensor_type" value="0" />
+	  <param name="topic_name" value="/radar" />
+	  <param name="point_cloud_topic_name" value="/radar_point_cloud" />
+	  	<!-- 0 - Delphi Radar, 1 - Truck CAN, 2 - G35 -->
+	</node>
+
+</launch>
