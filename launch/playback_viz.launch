@@ -1,0 +1,14 @@
+<launch>
+
+	<!-- bagfile playback -->
+	<node name="player" pkg="rosbag" type="play" output="screen"
+  	args="$(find cancom)/bagfiles/example_bagfile.bag" />
+
+	<!-- radar to pointcloud -->
+	<node name="radar_to_pc" pkg="cancom" type="radar_to_pointcloud.py"/>
+
+	<!-- rviz -->
+	<node name='rviz' pkg='rqt_rviz' type='rqt_rviz' required='true'
+    args="-d $(find cancom)/config/radar_pointcloud.rviz" />
+    
+</launch>
