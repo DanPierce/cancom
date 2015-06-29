@@ -11,17 +11,11 @@
 #include <libpcan.h>
 #include <fcntl.h>
 #include <string>
- #include "ros/ros.h"
+#include "ros/ros.h"
 #include <std_msgs/String.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <geometry_msgs/Quaternion.h>
- #include <sensor_msgs/PointCloud.h>
- #include <can_msgs/RadarData.h>
- #include <geometry_msgs/PointStamped.h>
- #include <can_msgs/TruckData.h>
- #include <boost/thread.hpp>
-#include <tf/tf.h>
-#include <tf/transform_broadcaster.h>
+#include <can_msgs/RadarData.h>
+#include <can_msgs/TruckData.h>
+#include <boost/thread.hpp>
 
 class Cancom {
 
@@ -31,7 +25,6 @@ public:
 
 	bool init(int sensor_type, std::string port_);
 	can_msgs::RadarData radarCanMsgCallback();
-	sensor_msgs::PointCloud radarPointCloudCallback();
 	can_msgs::TruckData truckCanMsgCallback();
 
 	virtual bool StartReading();
@@ -43,10 +36,6 @@ private:
 
 	can_msgs::TruckData currentTruckMsg;
 
-
-    tf::TransformBroadcaster tf_broadcaster; 
-
-	sensor_msgs::PointCloud Tracks;
 	int groupscanindex;
 	int prevgroupscanindex;
 	//sensor_msgs::PointCloud radarxyz;

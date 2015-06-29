@@ -77,15 +77,7 @@ bool Cancom::init(int sensor_type, string port_)
 
 	usleep(500);
 
-	if(sensor_type==0){
-		if(!initRadar()) return false;
-		// Initialize Point Clouds
-		for (int ii=0;ii<64;ii++){
-			Tracks.points[ii].x = 0.0; 
-			Tracks.points[ii].y = 0.0;
-			Tracks.points[ii].z = 0.0;
-		}
-	}
+	if(sensor_type==0 && !initRadar()){return false;}
 
 	is_init=true;
 	ROS_INFO("CAN: Communicating");
@@ -210,25 +202,6 @@ void Cancom::parse_can(TPCANRdMsg read_msg_full){
 					//ROS_INFO("RANGE: %f, RANGERATE: %f",currentTracks.range[track_id],currentTracks.range_rate[track_id]);
 				// }
 
-				Tracks.points[track_id].x = currentTracks.range[track_id]*cos(currentTracks.angle[track_id]);
-				Tracks.points[track_id].y = currentTracks.range[track_id]*sin(currentTracks.angle[track_id]);
-				Tracks.points[track_id].z = 0.0;
-
-				geometry_msgs::TransformStamped point_trans;
-				point_trans.header.stamp = ros::Time::now();
-				point_trans.header.frame_id = "radar";
-				// point_trans.child_frame_id = base_link_frame_id;
-
-				point_trans.transform.translation.x = Tracks.points[track_id].x;
-				point_trans.transform.translation.y = Tracks.points[track_id].y;
-				point_trans.transform.translation.z = 0.0;
-  				geometry_msgs::Quaternion q = tf::createQuaternionMsgFromRollPitchYaw(0.0, 0.0, 0.0 );
-
-				point_trans.transform.rotation = q;
-
-				tf_broadcaster.sendTransform(point_trans);
-
-
 			}else{
 				currentTracks.angle[track_id] = 0;
 				currentTracks.range[track_id] = 0;
@@ -305,7 +278,5 @@ void Cancom::parse_can(TPCANRdMsg read_msg_full){
 }
 
 can_msgs::RadarData Cancom::radarCanMsgCallback(){return currentTracks;};
-
-sensor_msgs::PointCloud Cancom::radarPointCloudCallback(){return Tracks;};
 
 can_msgs::TruckData Cancom::truckCanMsgCallback(){return currentTruckMsg;};

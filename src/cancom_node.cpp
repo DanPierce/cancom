@@ -39,7 +39,6 @@ public:
     {
       case 0:
         this->pub_ = nh_.advertise<can_msgs::RadarData>(topic_name_, 10); 
-        this->pc_pub_ = nh_.advertise<sensor_msgs::PointCloud>(point_cloud_topic_name_, 10); 
         break; 
       case 1:
         this->pub_ = nh_.advertise<can_msgs::TruckData>("/truck_can", 10);
@@ -74,9 +73,6 @@ protected:
 
     nh_.param("topic_name", topic_name_, std::string("/radar"));
     ROS_INFO_STREAM(name_ << ": Topic Name: " << topic_name_);
-
-    nh_.param("point_cloud_topic_name", point_cloud_topic_name_, std::string("/radar_point_cloud"));
-    ROS_INFO_STREAM(name_ << ": Point Cloud Topic Name: " << point_cloud_topic_name_);
 
     nh_.param("sensor_type", sensor_type, 0);
       // 0 - Delphi Radar
@@ -122,8 +118,6 @@ protected:
     {
       case 0:
         pub_.publish(can_.radarCanMsgCallback());
-        pc_pub_.publish(can_.radarCanMsgCallback());
-        break;
         break;
       case 1:
         pub_.publish(can_.truckCanMsgCallback());
@@ -143,9 +137,6 @@ protected:
   std::string name_;
   // ROS Messages
   ros::Publisher pub_;
-  ros::Publisher pc_pub_;
-
-
 
   Cancom can_;
 
@@ -154,7 +145,6 @@ protected:
 
   std::string port_;
   std::string topic_name_;
-  std::string point_cloud_topic_name_;
   int sensor_type;
   double pub_rate;
 
